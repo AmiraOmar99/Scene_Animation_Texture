@@ -47,6 +47,7 @@ The light and colors of the scene are also adjustetd to make it appear as in the
 ## Animations
 **Animations applied on the robotic body only**
 - The robot can walk forward in both z-direction and x-direction and it can also rotate right or left around y- axis.
+  
 **Animations applied to show the interaction between the robotic body and the objects in the scene**
 
 we make the robot jump and stand on the table by translations on y and x directions.
@@ -221,7 +222,7 @@ void jumpOver(int heightValue)
             } else {
                 jump_state = 2;
             }
-            glutTimerFunc(1000/60, jumpOver, heightValue);
+            glutTimerFunc(17, jumpOver, heightValue);
             break;
 
         // Returning Back
@@ -236,7 +237,7 @@ void jumpOver(int heightValue)
             } else if (y_body < returningPosition) {
                 jump_state = 0;
             }
-            glutTimerFunc(1000/60, jumpOver, heightValue);
+            glutTimerFunc(17, jumpOver, heightValue);
             break;
 
         default:
@@ -426,6 +427,7 @@ void display(void){
 We use a reset function to return the camera to its starting position.
 and to return the bodey movements to their original position.
 **Reset Key**: "b"
+
 ![Check GIF](reset.gif)
 ```c++
 void reset()
