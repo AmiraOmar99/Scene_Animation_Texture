@@ -461,7 +461,7 @@ In this part of the Assignment, we were assigned to make a Data Visualization ap
 * ComboBox to control the mode of rendering
 * Widget That's promoted to InteractorWindow To display the output inside the GUI
 
-###The modes
+### The modes
 The user interface starts at a default mode of Surface rendering with interaction widget, one slider to control the ISO value and a Combobox to control the mode of Rendering. 
 
 When Changing the combobox to ray casting mode, the gui changes to have three sliders to control the RGB values for the skin at iso value of 25 and defult RGB values of (1.0, 0.5, 0.3)
