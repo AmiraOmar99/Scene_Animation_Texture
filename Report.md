@@ -447,10 +447,160 @@ void reset()
     mainBody=0;
 }
 ```
+
+
+# Part 2
+
+##Description
+In this part of the Assignment, we were assigned to make a Data Visualization application using VTK and PyQT5 to read and visuakize mediacl data of extention (type) DICOM. We had to show two different modes of rendering; Surface Reandering and Volume (Ray casting) Rendering. 
+
+##The GUI
+###The components we used: 
+* Menubar with (File-Open) tab to open a DICOM File
+* Sliders to control the ISO value and RGB values
+* ComboBox to control the mode of rendering
+* Widget That's promoted to InteractorWindow To display the output inside the GUI
+
+###The modes
+The user interface starts at a default mode of Surface rendering with interaction widget, one slider to control the ISO value and a Combobox to control the mode of Rendering. 
+
+When Changing the combobox to ray casting mode, the gui changes to have three sliders to control the RGB values for the skin at iso value of 25 and defult RGB values of (1.0, 0.5, 0.3)
+
+
+## The Code Sequence: 
+1- initializing the gui components and calling their functions and slots:
+> In this part we initialize the sliders values and call for every widget's slot or function
+
+
+```py
+def slider_SLOT(val):
+    surfaceExtractor.SetValue(0, val)
+    iren.update()
+    
+class AppWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.verticalSlider.setValue(100)
+        self.ui.verticalSlider_2.setValue(50)
+        self.ui.verticalSlider_3.setValue(30)
+        self.ui.label_6.setText("1")
+        self.ui.label_7.setText("0.5")
+        self.ui.label_8.setText("0.3")
+
+        self.ui.menuOpen_File.triggered.connect(lambda:self.opendcm())
+        self.ui.comboBox.currentTextChanged.connect(lambda:self.mode())
+
+
+        self.ui.horizontalSlider.valueChanged.connect(slider_SLOT)
+        self.ui.horizontalSlider.valueChanged.connect(lambda:self.update())
+
+
+        self.ui.verticalSlider.valueChanged.connect(lambda:self.rgb())
+        self.ui.verticalSlider_2.valueChanged.connect(lambda:self.rgb())
+        self.ui.verticalSlider_3.valueChanged.connect(lambda:self.rgb())
+
+
+        self.ui.verticalSlider.valueChanged.connect(lambda:self.update2())
+        self.ui.verticalSlider_2.valueChanged.connect(lambda:self.update2())
+        self.ui.verticalSlider_3.valueChanged.connect(lambda:self.update2()) 
+
+```
+
+2- Reading DICOM Data: 
+> in this part we used QFileDialog to Browse for data's Directory, we also Used vtkDICOMImageReader() method to read the DICOM data in both cases; Surface and Volume Rendering. 
+
+```py
+    def opendcm(self):
+        fname = QtWidgets.QFileDialog.getExistingDirectory(self,"Open a folder",os.path.expanduser("~"),QtWidgets.QFileDialog.ShowDirsOnly)
+        self.path=fname.split("/")[-1]
+        print(fname)
+        print(self.path)
+        self.mode()
+        reader = vtk.vtkDICOMImageReader()
+        reader.SetDirectoryName(self.path)
+        reader.Update()
+
+```
+![Check GIF](Open_DICOM_Files.gif)
+
+3- Checking the mode of Rendering:
+> We implemented a function to check the combobox mode and set the interface widgets according to the mood. 
+> We Also implemented a function to update some labels with the sliders values.
+
+```py
+    def update(self):
+
+        self.ui.label_2.setText(str(self.ui.horizontalSlider.value()))
+
+    def update2(self):
+        self.ui.label_6.setText(str(self.ui.verticalSlider.value()/100))
+        self.ui.label_7.setText(str(self.ui.verticalSlider_2.value()/100))
+        self.ui.label_8.setText(str(self.ui.verticalSlider_3.value()/100))
+
+
+
+##### CHECKING RENDERING MODE ######
+
+    def mode(self):
+
+        if self.ui.comboBox.currentText()=="Surface Rendering":
+            for i in range(len(self.surface)):
+                 self.surface[i].show()
+            for i in range(len(self.ray)):
+                self.ray[i].hide()
+            self.surfacerendering()
+        elif self.ui.comboBox.currentText()=="Ray Casting Rendering":
+            for i in range(len(self.surface)):
+                self.surface[i].hide()
+            for i in range(len(self.ray)):
+                self.ray[i].show()
+            self.raycasting()
+            
+            
+```
+![Check GIF](From_surface_to_volume.gif)
+
+4- Surface Rendering:
+>This function in VTK has a specific pipeline that we follow:
+>* Extract the ISO value (we can update its value with a slider)
+>* Mapping the data
+>* Setting the Camera
+>* randering the output 
+>You can see these steps and methods in *part2.py* file
+
+![Check GIF](Surface_Rendering.gif)
+
+
+5- Ray Casting Render: 
+> just as surface renderng, we follow a specific pipeline:
+> * Mapping the data
+> * Setting the transfere function (with RGB components) values for each iso value (we can change these values with slider at ISO value of 25 that meets the skin's value)
+> * Setting the scalar opacity for each iso value
+> * Setting the Gradiant opacity for each iso value
+> * Collecting the properties of the volume from the previous steps
+> * Rendering the volume and setting the camera
+
+## Bonus
+For the bonus part, we implemented a function with 3 sliders to control each component of the RGB components value for the skin at ISO value of 25 
+
+![Check GIF](Bonus+Ray_Casting.gif)
+
+## Features
+* Flexible GUI that matches the interface with the mode of rendering
+* The Output of rendering appears inside the GUI itself, not in a pop-up rendering window.
+* Controling the Skin color with 3 sliders
+
 ## Problems
 - Most of texture maps are in jpg format.
 - Materials and their effect on the scene lighting
+- Determining the ISO value for each tissue.
+- Embedding the INTERACTOR_Window in the GUI itself.
 ## Solutions
 - We convert the jpg texture mapping images to bpm using:
   [Convert to bmp](https://l.facebook.com/l.php?u=https%3A%2F%2Fconvertio.co%2Fjpg-bmp%2F%3Ffbclid%3DIwAR1ljU8lQaCfI3pIyhzAVuwHcFFg89xnCw3TxB4pi82Vg46dQF9H3CE_DgQ&h=AT2DyxyPkQ6ltS9h_wnp16vtaL4_6d0zcj7J-4bI4xMPXAZzL0budQoWVf8b5URi4QJaBcqoidPjZbut3H4CxtKHAnpxwqGTUTu9kd0Natv8WSNL4QV5Ln2ubasYEA)
 - We added some material properties to avoid their effect on light.
+- We tried multiple values until reaching a sensible values
+- We Created a QTWidget and promoted it to match the interactor class
+- 
