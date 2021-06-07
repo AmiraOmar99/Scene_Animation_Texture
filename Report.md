@@ -451,11 +451,11 @@ void reset()
 
 # Part 2
 
-##Description
+## Description
 In this part of the Assignment, we were assigned to make a Data Visualization application using VTK and PyQT5 to read and visuakize mediacl data of extention (type) DICOM. We had to show two different modes of rendering; Surface Reandering and Volume (Ray casting) Rendering. 
 
-##The GUI
-###The components we used: 
+## The GUI
+### The components we used: 
 * Menubar with (File-Open) tab to open a DICOM File
 * Sliders to control the ISO value and RGB values
 * ComboBox to control the mode of rendering
@@ -603,4 +603,3 @@ For the bonus part, we implemented a function with 3 sliders to control each com
 - We added some material properties to avoid their effect on light.
 - We tried multiple values until reaching a sensible values
 - We Created a QTWidget and promoted it to match the interactor class
-- 
