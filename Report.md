@@ -523,7 +523,7 @@ class AppWindow(QMainWindow):
         reader.Update()
 
 ```
-![Check GIF](Open_DICOM_Files.gif)
+![Check GIF](Open_DICOM_files.gif)
 
 3- Checking the mode of Rendering:
 > We implemented a function to check the combobox mode and set the interface widgets according to the mood. 
