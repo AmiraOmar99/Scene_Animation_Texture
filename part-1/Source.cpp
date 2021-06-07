@@ -816,7 +816,7 @@ void jumpOver(int heightValue)
             } else {
                 jump_state = 2;
             }
-            glutTimerFunc(1000/60, jumpOver, heightValue);
+            glutTimerFunc(17, jumpOver, heightValue);
             break;
 
         // Returning Back
@@ -831,7 +831,7 @@ void jumpOver(int heightValue)
             } else if (y_body < returningPosition) {
                 jump_state = 0;
             }
-            glutTimerFunc(1000/60, jumpOver, heightValue);
+            glutTimerFunc(17, jumpOver, heightValue);
             break;
 
         default:
